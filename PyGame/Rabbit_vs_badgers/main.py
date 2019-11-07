@@ -19,10 +19,10 @@ accuracy = [0,0] #Player accuracy -> [Shots fired, Shots that hit the targets]
 arrows = []
 
 #Enemies
-badtimer=100
+badtimer=100 #Sets timer after which next enemy spawns
 badtimer1=0
 badguys=[[640,100]]
-healthvalue=194
+healthvalue=194 #Sets value for health bar
 
 #Loading images
 player = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/dude.png")
@@ -43,16 +43,19 @@ youwin = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badg
 hit = pygame.mixer.Sound("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/audio/explode.wav")
 enemy = pygame.mixer.Sound("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/audio/enemy.wav")
 shoot = pygame.mixer.Sound("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/audio/shoot.wav")
+    #Setting volume levels
 hit.set_volume(0.05)
 enemy.set_volume(0.05)
 shoot.set_volume(0.05)
+    #Background music
 pygame.mixer.music.load('C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/audio/moonlight.wav')
-pygame.mixer.music.play(-1, 0.0)
+pygame.mixer.music.play(-1, 0.0)    #Sets the background music to play on loop
 pygame.mixer.music.set_volume(0.25)
 
 #Game loop
 running = 1
 exitcode = 0
+
 while running:
     badtimer-=1
     #Refreshing screen
@@ -102,8 +105,8 @@ while running:
     index=0
     for badguy in badguys:
         if badguy[0]<-64:
-            badguys.pop(index)
-        badguy[0]-=7
+            badguys.pop(index) #Deletes enemy when it goes off screen
+        badguy[0]-=4 #Speed of enemies
         #Castle attack
         badrect=pygame.Rect(badguyimg.get_rect())
         badrect.top=badguy[1]
@@ -130,7 +133,7 @@ while running:
 
     #Game timer display
     font = pygame.font.Font(None, 24)
-    survivedtext = font.render(str((90000-pygame.time.get_ticks())/60000)+":"+str((90000-pygame.time.get_ticks())/1000%60).zfill(2), True, (0,0,0))
+    survivedtext = font.render(str(math.trunc((90000-pygame.time.get_ticks())/60000))+":"+str(math.trunc((90000-pygame.time.get_ticks())/1000%60)).zfill(2), True, (0,0,0))
     textRect = survivedtext.get_rect()
     textRect.topright=[635,5]
     screen.blit(survivedtext, textRect)
@@ -212,7 +215,7 @@ while running:
         running=0
         exitcode=0
     if accuracy[1]!=0:
-        accuracyScore=accuracy[0]*1.0/accuracy[1]*100
+        accuracyScore=math.trunc(accuracy[0]*1.0/accuracy[1]*100)
     else:
         accuracyScore=0
 
