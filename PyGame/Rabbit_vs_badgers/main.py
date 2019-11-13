@@ -1,8 +1,15 @@
 #Importing required libraries
+import os
 import math
 import random
 import pygame
 from pygame.locals import *
+
+
+#Setting the current working directory to the script's directory
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 
 #Initializing the game
 pygame.init()
@@ -21,28 +28,28 @@ arrows = []
 #Enemies
 badtimer=100 #Sets timer after which next enemy spawns
 badtimer1=0
-badguys=[[640,100]]
+badguys_position=[[640,100]]
 healthvalue=194 #Sets value for health bar
 
 #Loading images
-player = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/dude.png")
-grass = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/grass.png")
-castle = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/castle.png")
-arrow = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/bullet.png")
+player = pygame.image.load("./resources/images/dude.png")
+grass = pygame.image.load("./resources/images/grass.png")
+castle = pygame.image.load("./resources/images/castle.png")
+arrow = pygame.image.load("./resources/images/bullet.png")
 
-badguyimg1 = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/badguy.png")
+badguyimg1 = pygame.image.load("./resources/images/badguy.png")
 badguyimg=badguyimg1
 
-healthbar = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/healthbar.png")
-health = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/health.png")
+healthbar = pygame.image.load("./resources/images/healthbar.png")
+health = pygame.image.load("./resources/images/health.png")
 
-gameover = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/gameover.png")
-youwin = pygame.image.load("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/images/youwin.png")
+gameover = pygame.image.load("./resources/images/gameover.png")
+youwin = pygame.image.load("./resources/images/youwin.png")
 
 #Loading Audio
-hit = pygame.mixer.Sound("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/audio/explode.wav")
-enemy = pygame.mixer.Sound("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/audio/enemy.wav")
-shoot = pygame.mixer.Sound("C:/Personal/Codes/Github/Games/PyGame/Rabbit_vs_badgers/resources/audio/shoot.wav")
+hit = pygame.mixer.Sound("./resources/audio/explode.wav")
+enemy = pygame.mixer.Sound("./resources/audio/enemy.wav")
+shoot = pygame.mixer.Sound("./resources/audio/shoot.wav")
     #Setting volume levels
 hit.set_volume(0.05)
 enemy.set_volume(0.05)
@@ -96,16 +103,16 @@ while running:
 
     #Enemies
     if badtimer==0:
-        badguys.append([640, random.randint(50,430)])
+        badguys_position.append([640, random.randint(50,430)])
         badtimer=100-(badtimer1*2)
         if badtimer1>=35:
             badtimer1=35
         else:
             badtimer1+=5
     index=0
-    for badguy in badguys:
+    for badguy in badguys_position:
         if badguy[0]<-64:
-            badguys.pop(index) #Deletes enemy when it goes off screen
+            badguys_position.pop(index) #Deletes enemy when it goes off screen
         badguy[0]-=4 #Speed of enemies
         #Castle attack
         badrect=pygame.Rect(badguyimg.get_rect())
@@ -114,7 +121,7 @@ while running:
         if badrect.left<64:
             hit.play()
             healthvalue -= random.randint(5,20)
-            badguys.pop(index)
+            badguys_position.pop(index)
         index1=0
         for bullet in arrows:
             bullrect=pygame.Rect(arrow.get_rect())
@@ -123,12 +130,13 @@ while running:
             if badrect.colliderect(bullrect):
                 enemy.play()
                 accuracy[0]+=1
-                badguys.pop(index)
+                badguys_position.pop(index)
                 arrows.pop(index1)
             index1+=1
         #Next enemy
         index+=1
-    for badguy in badguys:
+    #Displays enemies
+    for badguy in badguys_position:
         screen.blit(badguyimg, badguy)
 
     #Game timer display
